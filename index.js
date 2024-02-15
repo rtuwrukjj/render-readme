@@ -1,22 +1,11 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
 
-// Fixed token (example)
-const fixedToken = 'yourFixedToken';
-
-// Secret key for JWT
-const secretKey = 'yourSecretKey';
+const protectedToken = 'abcdefghijkl123456789';
 
 app.use(express.json());
-
-// Endpoint for generating JWT token if not provided
-app.post('/generate-token', (req, res) => {
-  const token = jwt.sign({ fixedToken: true }, secretKey, { expiresIn: '1h' });
-  res.json({ token });
-});
 
 // Protected endpoint
 app.get('/protected', authenticateToken, (req, res) => {
@@ -26,16 +15,13 @@ app.get('/protected', authenticateToken, (req, res) => {
 // Middleware to authenticate token
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
-  if (!token || token !== `Bearer ${fixedToken}`) {
+
+  if (!token || token !== `Bearer ${protectedToken}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  jwt.verify(token.split(' ')[1], secretKey, (err, decoded) => {
-    if (err || !decoded.fixedToken) {
-      return res.status(403).json({ error: 'Forbidden' });
-    }
-    next();
-  });
+  // If the token is correct, proceed to the next middleware or route handler
+  next();
 }
 
 app.listen(PORT, () => {
