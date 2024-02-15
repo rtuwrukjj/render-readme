@@ -42,7 +42,7 @@ app.post('/webhook', express.json({ type: 'application/json' }), async (req, res
   // const user = await db.find({ email: req.body.email })
   return res.json({
     // OAS Security variables
-    apiKey: "abcdefghijkl123456789",
+    apiKey: {bearerAuth: "abcdefghijkl123456789"},
   });
 });
 
