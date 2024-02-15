@@ -30,7 +30,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  jwt.verify(token, secretKey, (err, decoded) => {
+  jwt.verify(token.split(' ')[1], secretKey, (err, decoded) => {
     if (err || !decoded.fixedToken) {
       return res.status(403).json({ error: 'Forbidden' });
     }
